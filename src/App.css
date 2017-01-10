@@ -5,13 +5,20 @@
   max-width: 90%;
 }
 
-.App h1 {
-  font-size: 40px; font-size: 4rem;
+.App > h1 {
+  font-size: 60px; font-size: 6rem;
 }
 
-.Typeface {
-  background: #f5f5f5;
-  padding: 2rem;
+.App > h2 {
+  font-size: 30px; font-size: 3rem;
+}
+
+.Typeface section {
+  margin: 4rem 0;
+}
+
+.Typeface p {
+  margin-bottom: 1rem;
 }
 
 .Typeface header h2 {
