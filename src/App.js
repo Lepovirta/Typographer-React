@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 import ms from 'simple-modular-scale';
+import cx from 'classnames';
 
 import './App.css';
 
@@ -20,7 +21,8 @@ class App extends Component {
     super(props);
     this.state = {
       typefaces: [],
-      typeface: '',
+      firstFont: '',
+      secondFont: '',
       firstLocked: false,
       secondLocked: false
     };
@@ -30,7 +32,8 @@ class App extends Component {
 
   generateNew() {
     this.setState(prevState => ({
-      typeface: newTypeface(prevState.typefaces)
+      firstFont: prevState.firstLocked ? prevState.firstFont : newTypeface(prevState.typefaces),
+      secondFont: prevState.secondLocked ? prevState.secondFont : newTypeface(prevState.typefaces)
     }));
   }
 
@@ -75,34 +78,41 @@ class App extends Component {
           <button className={this.state.firstLocked ? 'locked' : ''} onClick={() => this.toggleLock(1)}>Lock #1</button>
           <button className={this.state.secondLocked ? 'locked' : ''} onClick={() => this.toggleLock(2)}>Lock #2</button>
         </aside>
-        {this.state.typeface && 
-          <Typeface 
-            firstLocked={this.state.firstLocked} 
-            secondLocked={this.state.secondLocked} 
-            typeface={this.state.typeface} />
-        }
+        <div className="typefaces">
+          {this.state.firstFont &&
+            <Typeface 
+              locked={this.state.firstLocked}
+              typeface={this.state.firstFont} /> }
+          {this.state.secondFont &&
+            <Typeface 
+              locked={this.state.secondLocked}
+              typeface={this.state.secondFont} /> }
+          </div>
       </div>
     );
   }
 }
 
-const Typeface = ({firstLocked, secondLocked, typeface}) => {
+const Typeface = ({locked, typeface}) => {
 
   $.get('https://fonts.googleapis.com/css?family='+typeface.family, function (result) {
     var newStyle = document.createElement('style');
     newStyle.appendChild(document.createTextNode(result));
     document.head.appendChild(newStyle);
-  });  
+  });
   
+
+  const classes = cx('Typeface', locked ? 'locked' : '');
+
   return (
-    <section className="Typeface">
+    <section className={classes}>
       <header>
         <h2><a title="View Specimen" href={'https://fonts.google.com/specimen/'+typeface.family.split(' ').join('+') }>{typeface.family} <span>({typeface.category})</span></a></h2>
         <h3><a title="Copy @font-face" href={'https://fonts.googleapis.com/css?family='+typeface.family.split(' ').join('+') }>@font-face</a></h3>
         <h3>{"<link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family="+typeface.family.split(' ').join('+')+">"}</h3>
       </header>
       <section style={{ fontFamily: typeface.family }}>
-        <Headings firstLocked={firstLocked} />
+        <Headings />
         <p>Google Fonts makes it quick and easy for everyone to use web fonts, including professional designers and developers. We believe that everyone should be able to bring quality typography to their web pages and applications.</p>
         <p>Our goal is to create a directory of web fonts for the world to use. Our API service makes it easy to add Google Fonts to a website in seconds. The service runs on Google's servers which are fast, reliable and tested. Google provides this service free of charge.</p>
         <p>All of the fonts are Open Source. This means that you are free to share your favorites with friends and colleagues. You can even customize them for your own use, or collaborate with the original designer to improve them. And you can use them in every way you want, privately or commercially — in print, on your computer, or in your websites.</p>
