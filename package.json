@@ -1,9 +1,11 @@
 {
   "name": "typographer-react",
   "version": "0.1.0",
+  "homepage": "https://lepovirta.github.io/Typographer-React/",
   "private": true,
   "devDependencies": {
     "classnames": "2.2.5",
+    "gh-pages": "0.12.0",
     "react-scripts": "0.8.5"
   },
   "dependencies": {
@@ -16,6 +18,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   }
 }
