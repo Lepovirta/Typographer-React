@@ -1,0 +1,32 @@
+.App {
+  width: 1600px;
+  margin: 1.5em auto;
+  height: 100%;
+  max-width: 90%;
+}
+
+.App h1 {
+  font-size: 40px; font-size: 4rem;
+}
+
+.Typeface {
+  background: #f5f5f5;
+  padding: 2rem;
+}
+
+.Typeface header h2 {
+  font-size: 60px; font-size: 6rem;
+}
+
+.Typeface header h3 {
+  font-size: 30px; font-size: 3rem;
+}
+
+.Typeface header span {
+  color: #ddd;
+}
+
+.Links strong {
+  font-weight: bold;
+  text-decoration: underline;
+}
