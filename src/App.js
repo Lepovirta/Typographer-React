@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import $ from 'jquery';
 import ms from 'simple-modular-scale';
 import cx from 'classnames';
-
 import './App.css';
 
 const url = 'https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyCZt1_L89iUTbDM6HROG5ivZ01ngau-86Y';
@@ -20,8 +18,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      previewText: 'Try Changing Me!',
-      paragraphPreviewText: 'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.',
+      previewText: 'The Typographer',
+      paragraphPreviewText: 'Generate Awesome Typeface Combinations with Google Fonts API, Modular Scale and Randomization.',
       typefaces: [],
       firstFont: '',
       secondFont: '',
@@ -52,20 +50,11 @@ class App extends Component {
     }
   }
 
-  componentDidMount() {
-    this.serverRequest = $.get(url, function (result) {
-      this.setState({
-        typefaces: result.items
-      });
-    }.bind(this));
-  }
-
-  componentWillMount(e) {
-    window.addEventListener('keydown', function (e) {
-      if (event.key === 'Enter') {
-        this.generateNew();
-      }
-    }.bind(this));
+  async componentDidMount() {
+    const serverRequest = await (await fetch(url)).json();
+    this.setState({
+      typefaces: serverRequest.items
+    });
     this.generateNew();
   }
 
@@ -81,15 +70,13 @@ class App extends Component {
 
     return (
       <div className="App">
-        <h1>The Typographer 2.0</h1>
-        <h2>Generate Awesome Typeface Combinations with Google Fonts API, Modular Scale and Randomization.</h2>
-        <aside className="functions">
-          <input onChange={this.updatePreviewText.bind(this)} value={this.state.previewText} type="text" />
-          <button onClick={this.generateNew}>New Combination (enter)</button>
+        <aside className="functions element">
+          <input onChange={this.updatePreviewText} value={this.state.previewText} type="text" />
+          <button onClick={this.generateNew}>New Combination</button>
           <button className={this.state.firstLocked ? 'locked' : ''} onClick={() => this.toggleLock(1)}>Lock #1</button>
           <button className={this.state.secondLocked ? 'locked' : ''} onClick={() => this.toggleLock(2)}>Lock #2</button>
         </aside>
-        <textarea onChange={this.updateParagraphPreviewText.bind(this)} value={this.state.paragraphPreviewText}></textarea>
+        <textarea className="element" onChange={this.updateParagraphPreviewText} value={this.state.paragraphPreviewText}></textarea>
         <div className="typefaces">
           {this.state.firstFont &&
             <Typeface 
@@ -111,11 +98,10 @@ class App extends Component {
 
 const Typeface = ({locked, typeface, previewText, paragraphPreviewText}) => {
 
-  $.get('https://fonts.googleapis.com/css?family='+typeface.family, function (result) {
-    var newStyle = document.createElement('style');
-    newStyle.appendChild(document.createTextNode(result));
-    document.head.appendChild(newStyle);
-  });
+  const fetchAsyncA = async () => await (await fetch('https://fonts.googleapis.com/css?family='+typeface.family)).json()
+  var newStyle = document.createElement('style');
+  newStyle.appendChild(document.createTextNode(fetchAsyncA));
+  document.head.appendChild(newStyle);
   
 
   const classes = cx('Typeface', locked ? 'locked' : '');
@@ -123,14 +109,15 @@ const Typeface = ({locked, typeface, previewText, paragraphPreviewText}) => {
   return (
     <section className={classes}>
       <header>
-        <h2><a title="View Specimen" href={'https://fonts.google.com/specimen/'+typeface.family.split(' ').join('+') }>{typeface.family} <span>({typeface.category})</span></a></h2>
-        <h3><a title="Copy @font-face" href={'https://fonts.googleapis.com/css?family='+typeface.family.split(' ').join('+') }>@font-face</a></h3>
-        <h3>{"<link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family="+typeface.family.split(' ').join('+')+">"}</h3>
+        <h2><a target="_blank" title="View Specimen in Google Fonts" href={'https://fonts.google.com/specimen/'+typeface.family.split(' ').join('+') }>{typeface.family} <span>({typeface.category})</span></a></h2>
+        <h3><a target="_blank" title="Copy @font-face definition" href={'https://fonts.googleapis.com/css?family='+typeface.family.split(' ').join('+') }>@font-face definition</a></h3>
+        <h3 className="font-link-tag">{"<link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family="+typeface.family.split(' ').join('+')+">"}</h3>
       </header>
       <section style={{ fontFamily: typeface.family }}>
         <Headings previewText={previewText} />
         <p>{paragraphPreviewText}</p>
       </section>
+      <h3 className="font-options">Options</h3>
       <Links files={typeface.files} />
     </section>
   );
@@ -165,7 +152,7 @@ const Links = ({files}) => {
       Object.keys(files).map((key, index) => {
         return (
           <li key={index}>
-            <strong>{key}</strong><a href={files[key]} key={index}> {files[key]}</a>
+            <a href={files[key]} key={index}><strong>{key}</strong></a>
           </li>
         )
       })

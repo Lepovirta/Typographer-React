@@ -2,43 +2,64 @@
   margin: 1em;
 }
 
-.App > h1 {
-  font-size: 30px; font-size: 3rem;
+.element {
+  margin-bottom: 1em;
 }
 
-.App > h2 {
-  font-size: 18px; font-size: 1.8rem;
+.App > h1 {
+  font-size: 25px; font-size: 2.5rem;
 }
 
 .App .typefaces {
   display: flex;
 }
 
+.App > aside {
+  display: flex;
+  justify-content: space-between;
+}
+
+.App > aside > * {
+  flex: 1;
+  margin: 0.1rem;
+}
+
 .Typeface {
   flex: 1;
+  width: 50%;
+  box-sizing: border-box;
   padding: 0.5em;
-  background: #f5f5f5;
-  margin: 0.5em;
-  border-radius: 0.5em;
   position: relative;
+}
+
+.Typeface:first-child {
+  border-right: 1px solid #eee;
+}
+
+.Typeface .font-link-tag {
+  font-family: monospace;
+  letter-spacing: -1px;
+  background: #eee;
+  padding: 0.25rem;
+  font-size: 90%;
 }
 
 .Typeface.locked:before {
   content: "locked";
-  font-size: 80%;
   text-transform: uppercase;
-  padding: 0.1em 0.25em;
-  color: #fff;
-  background: #000;
+  padding: 0.1em 0.335em;
+  color: #000;
+  background: indianred;
   border-radius: 2px;
   position: absolute;
   display: block;
   top: 1em;
   right: 1em;
+  transition: 1s all;
 }
 
 .Typeface section {
-  margin: 4rem 0;
+  margin: 2rem 0;
 }
 
 .Typeface p {
@@ -46,18 +67,26 @@
 }
 
 .Typeface header h2 {
-  font-size: 30px; font-size: 3rem;
-}
-
-.Typeface header h3 {
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-decoration: underline;
   font-size: 22px; font-size: 2.2rem;
 }
 
 .Typeface header span {
-  color: #ddd;
+  color: #bbb;
+}
+
+.Typeface .font-options {
+  font-size: 22px; font-size: 2.2rem;
 }
 
 .Links strong {
   font-weight: bold;
   text-decoration: underline;
+}
+
+.Links li {
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
