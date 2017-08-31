@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import $ from 'jquery';
 import ms from 'simple-modular-scale';
 import cx from 'classnames';
 import './App.css';
@@ -50,11 +51,12 @@ class App extends Component {
     }
   }
 
-  async componentDidMount() {
-    const serverRequest = await (await fetch(url)).json();
-    this.setState({
-      typefaces: serverRequest.items
-    });
+  componentDidMount() {
+    this.serverRequest = $.get(url, function (result) {
+      this.setState({
+        typefaces: result.items
+      });
+    }.bind(this));
     this.generateNew();
   }
 
@@ -98,11 +100,11 @@ class App extends Component {
 
 const Typeface = ({locked, typeface, previewText, paragraphPreviewText}) => {
 
-  const fetchAsyncA = async () => await (await fetch('https://fonts.googleapis.com/css?family='+typeface.family)).json()
-  var newStyle = document.createElement('style');
-  newStyle.appendChild(document.createTextNode(fetchAsyncA));
-  document.head.appendChild(newStyle);
-  
+  $.get('https://fonts.googleapis.com/css?family='+typeface.family, function (result) {
+    var newStyle = document.createElement('style');
+    newStyle.appendChild(document.createTextNode(result));
+    document.head.appendChild(newStyle);
+  });
 
   const classes = cx('Typeface', locked ? 'locked' : '');
 
